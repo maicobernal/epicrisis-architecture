@@ -6,7 +6,7 @@ migración.
 
 ## Abrir
 
-- Producción: URL publicada por workflow `Architecture Docs`.
+- Producción: <https://maicobernal.github.io/epicrisis-architecture/>.
 - Local: abrir [`index.html`](index.html) en navegador moderno.
 - Sin build, servidor ni JavaScript. Cada diagrama es HTML + SVG inline.
 
@@ -43,6 +43,8 @@ migración.
   sensibles.
 - Clasificación de publicación: public-safe. Detalle operativo interno, evidencias live y datos de
   seguridad sensibles permanecen fuera de esta carpeta.
+- Repo público `maicobernal/epicrisis-architecture` es mirror generado. Fuente editable y review
+  permanecen en esta carpeta; workflow despliega sólo después de merge a `develop`.
 - Fecha de corte documental: 2026-08-27.
 
 ## Mantenimiento
