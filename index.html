@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Epicrisis — Portal de arquitectura</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;background:#020617;color:#e2e8f0;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;padding:32px}.wrap{max-width:1120px;margin:auto}h1{font-size:30px;color:#fff;margin:8px 0}.sub{color:#94a3b8;max-width:850px;line-height:1.6}.state{display:inline-block;color:#fbbf24;border:1px solid #fbbf24;border-radius:99px;padding:5px 10px;font-size:11px;margin-top:12px}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-top:30px}.card{display:block;text-decoration:none;background:#0f172a;border:1px solid #1e293b;border-radius:12px;padding:22px;transition:.15s}.card:hover{border-color:#22d3ee;transform:translateY(-2px)}.num{font-size:11px;color:#22d3ee}.card h2{font-size:17px;color:#fff;margin:9px 0}.card p{font-size:12px;color:#94a3b8;line-height:1.55;margin:0}.meta{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:22px}.pill{background:#0f172a;border:1px solid #1e293b;border-radius:8px;padding:12px;font-size:11px;color:#94a3b8}.pill strong{display:block;color:#e2e8f0;margin-bottom:5px}.footer{color:#475569;font-size:11px;margin-top:28px;border-top:1px solid #1e293b;padding-top:18px}@media(max-width:760px){body{padding:20px}.grid,.meta{grid-template-columns:1fr}}
+  </style>
+</head>
+<body><main class="wrap">
+  <div style="color:#34d399;font-size:12px">● DOCUMENTACIÓN TÉCNICA</div>
+  <h1>Epicrisis — Arquitectura</h1>
+  <p class="sub">Componentes GCP, secuencias runtime, flujos clínicos, controles de seguridad y modelo Firestore. Derivado de código, Terraform y ADR vigentes.</p>
+  <span class="state">PROD clínico pre-live · topología objetivo</span>
+  <section class="grid">
+    <a class="card" href="01-componentes.html"><span class="num">01</span><h2>Componentes</h2><p>Frontend, Cloud Run, Identity Platform, Pub/Sub, Tasks, Firestore, Storage, Workspace y delivery.</p></a>
+    <a class="card" href="02-secuencias.html"><span class="num">02</span><h2>Secuencias</h2><p>Autenticación tenant, ingesta Forms y generación/versionado de documentos.</p></a>
+    <a class="card" href="03-flujos-datos.html"><span class="num">03</span><h2>Flujos de datos</h2><p>Datos crudos, proyecciones, eventos, artefactos y límites de uso secundario.</p></a>
+    <a class="card" href="04-seguridad.html"><span class="num">04</span><h2>Seguridad</h2><p>Fronteras de confianza, IAM por workload, OIDC, DWD, defensa tenant y PHI.</p></a>
+    <a class="card" href="05-firestore.html"><span class="num">05</span><h2>Firestore</h2><p>Control plane global, árbol tenant, colecciones, relaciones, revisiones y política de backup.</p></a>
+    <a class="card" href="06-trazabilidad.html"><span class="num">REF</span><h2>Trazabilidad</h2><p>Fuentes exactas en backend, Terraform, Rules, codecs y ADR.</p></a>
+  </section>
+  <section class="meta"><div class="pill"><strong>Región</strong>us-central1</div><div class="pill"><strong>Tenants</strong>HEC · HF · HARG · CLBZ</div><div class="pill"><strong>Corte</strong>2026-08-27</div></section>
+  <div class="footer">Epicrisis v2 · diagramas HTML/SVG autocontenidos · sin PHI ni secretos</div>
+</main></body></html>
