@@ -21,6 +21,7 @@ required=(
   04-seguridad.html
   05-firestore.html
   06-trazabilidad.html
+  07-cicd.html
   README.md
   source-map.md
 )
@@ -40,11 +41,14 @@ for html in "${architecture_dir}"/*.html; do
   fi
 done
 
-for link in 01-componentes.html 02-secuencias.html 03-flujos-datos.html 04-seguridad.html 05-firestore.html 06-trazabilidad.html; do
+for link in 01-componentes.html 02-secuencias.html 03-flujos-datos.html 04-seguridad.html 05-firestore.html 06-trazabilidad.html 07-cicd.html; do
   contains_fixed "href=\"${link}\"" "${architecture_dir}/index.html"
 done
 
 contains_fixed 'runtime_enabled=false' "${architecture_dir}/README.md"
 contains_fixed 'tenant_registry_status=provisioning' "${architecture_dir}/README.md"
+contains_fixed 'epicrisis-pr-ci (hu-forms-shared)' "${architecture_dir}/07-cicd.html"
+contains_fixed 'hosting-deployer-dev' "${architecture_dir}/07-cicd.html"
+contains_fixed 'develop:test' "${architecture_dir}/07-cicd.html"
 
 echo "Architecture portal validated: ${#required[@]} required files"

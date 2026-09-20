@@ -19,6 +19,7 @@ Mapa de afirmaciones hacia fuentes ejecutables. ADR explica intención; código/
 | Storage | `service/packages/infra/modules/storage/` | buckets versionados, IAM mínimo, sin list para runtimes clínicos |
 | IAM | `service/packages/infra/modules/iam/` | service accounts por workload, `signBlob` y `signJwt` mínimos |
 | Delivery | `service/docs/adr/0003-cloud-build-delivery.md`, `service/docs/adr/0005-automated-dev-delivery.md` | Cloud Build publica y despliega digest en DEV; Terraform conserva infraestructura y plan aprobado |
+| Diagrama CI/CD | `docs/cicd.md`, `.github/workflows/dev-frontend-cd.yml`, `service/packages/infra/modules/delivery/main.tf` | checks requeridos, fan-out post-merge, WIF frontend y promoción TEST fast-forward |
 | Forms/DWD | `service/docs/adr/0002-forms-dwd-ownership.md` | DWD sin keys, subject/mapping server-side, scopes mínimos |
 | Multitenancy | `service/docs/adr/0001-single-project-multi-hospital.md` | proyecto único por ambiente, tenants GCIP y paths clínicos |
 | Raw source | `service/docs/adr/0004-raw-form-responses-as-clinical-source.md` | respuesta cruda inmutable y cadena de correcciones |

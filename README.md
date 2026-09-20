@@ -20,6 +20,7 @@ migración.
 | [`04-seguridad.html`](04-seguridad.html) | ¿Cuáles son fronteras de confianza y controles? |
 | [`05-firestore.html`](05-firestore.html) | ¿Cómo se organiza modelo Firestore? |
 | [`06-trazabilidad.html`](06-trazabilidad.html) | ¿Qué archivo de código respalda cada afirmación? |
+| [`07-cicd.html`](07-cicd.html) | ¿Cómo una PR entrega backend, frontend e infraestructura a DEV? |
 | [`source-map.md`](source-map.md) | Fuente Markdown de trazabilidad para revisión en Git |
 
 ## Convenciones
@@ -45,7 +46,7 @@ migración.
   seguridad sensibles permanecen fuera de esta carpeta.
 - Repo público `maicobernal/epicrisis-architecture` es mirror generado. Fuente editable y review
   permanecen en esta carpeta; workflow despliega sólo después de merge a `develop`.
-- Fecha de corte documental: 2026-08-27.
+- Fecha de corte documental: 2026-09-20.
 
 ## Mantenimiento
 

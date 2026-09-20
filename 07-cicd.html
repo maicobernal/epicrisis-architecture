@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Epicrisis — CI/CD</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;background:#020617;color:#e2e8f0;font-family:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;padding:24px}.wrap{max-width:1240px;margin:auto}.top{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;margin-bottom:20px}.eyebrow{color:#34d399;font-size:11px;letter-spacing:.08em}.title{font-size:28px;color:#fff;margin:8px 0}.sub{color:#94a3b8;font-size:12px;line-height:1.6;max-width:850px}.back{color:#22d3ee;font-size:11px;text-decoration:none;border:1px solid #164e63;border-radius:6px;padding:8px 10px}.panel,.card{background:#0f172a;border:1px solid #1e293b;border-radius:12px}.panel{padding:16px}.panel svg{width:100%;height:auto;display:block}.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:16px}.card{padding:15px}.card h2{font-size:12px;color:#fff;margin:0 0 8px}.card p{font-size:10px;line-height:1.55;color:#94a3b8;margin:0}.dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:7px}.cyan{background:#22d3ee}.green{background:#34d399}.amber{background:#fbbf24}.rose{background:#fb7185}.legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:14px;color:#64748b;font-size:10px}.line{display:inline-block;width:24px;border-top:2px solid #64748b;vertical-align:middle;margin-right:6px}.line.dash{border-top-style:dashed}.foot{font-size:10px;color:#475569;margin-top:18px;text-align:center}@media(max-width:850px){body{padding:14px}.top{display:block}.back{display:inline-block;margin-top:12px}.cards{grid-template-columns:1fr 1fr}}@media(max-width:520px){.cards{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+<main class="wrap">
+  <header class="top">
+    <div>
+      <div class="eyebrow">● FLUJO ACTIVO · 2026-09-20</div>
+      <h1 class="title">Una PR, un merge, DEV automático</h1>
+      <p class="sub">Gate único antes del merge. Después, backend, frontend e infraestructura siguen pipelines separados con identidades mínimas. TEST sólo avanza por fast-forward del mismo SHA.</p>
+    </div>
+    <a class="back" href="index.html">← Portal arquitectura</a>
+  </header>
+
+  <section class="panel" aria-label="Diagrama del flujo CI/CD">
+    <svg viewBox="0 0 1200 790" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="diagram-title diagram-desc">
+      <title id="diagram-title">CI/CD de Epicrisis desde pull request hasta DEV y promoción TEST</title>
+      <desc id="diagram-desc">Una pull request pasa dos checks. Rebase merge a develop dispara backend Cloud Build, frontend GitHub Actions o Terraform DEV. TEST recibe el mismo SHA sólo por fast-forward.</desc>
+      <defs>
+        <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M32 0H0V32" fill="none" stroke="#1e293b" stroke-width=".5"/></pattern>
+        <marker id="arrow" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="#64748b"/></marker>
+        <marker id="arrowGreen" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="#34d399"/></marker>
+        <marker id="arrowCyan" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="#22d3ee"/></marker>
+        <marker id="arrowAmber" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="#fbbf24"/></marker>
+      </defs>
+      <rect width="1200" height="790" rx="10" fill="#020617"/><rect width="1200" height="790" rx="10" fill="url(#grid)"/>
+
+      <!-- Boundaries -->
+      <rect x="20" y="24" width="1160" height="232" rx="12" fill="#0f172a" fill-opacity=".35" stroke="#334155" stroke-dasharray="7 5"/>
+      <text x="38" y="47" fill="#94a3b8" font-size="11" font-weight="600">GITHUB · CONTROL Y APROBACIÓN</text>
+      <rect x="20" y="280" width="1160" height="350" rx="12" fill="#0f172a" fill-opacity=".35" stroke="#fbbf24" stroke-dasharray="7 5"/>
+      <text x="38" y="303" fill="#fbbf24" font-size="11" font-weight="600">DEV · hu-forms-shared + hu-forms-dev · us-central1 · DATOS SINTÉTICOS</text>
+      <rect x="20" y="654" width="1160" height="112" rx="12" fill="#0f172a" fill-opacity=".35" stroke="#a78bfa" stroke-dasharray="7 5"/>
+      <text x="38" y="677" fill="#a78bfa" font-size="11" font-weight="600">PROMOCIÓN TEST · MISMO SHA, SIN REBUILD</text>
+
+      <!-- Arrows first -->
+      <path d="M177 139H235" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+      <path d="M405 139H457" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+      <path d="M650 139H708" stroke="#34d399" stroke-width="2" marker-end="url(#arrowGreen)"/>
+      <path d="M806 184V330H230V359" fill="none" stroke="#34d399" stroke-width="2" marker-end="url(#arrowGreen)"/>
+      <path d="M806 184V330H591V359" fill="none" stroke="#22d3ee" stroke-width="2" marker-end="url(#arrowCyan)"/>
+      <path d="M806 184V330H954V359" fill="none" stroke="#fbbf24" stroke-width="2" marker-end="url(#arrowAmber)"/>
+      <path d="M230 433V474" stroke="#34d399" stroke-width="2" marker-end="url(#arrowGreen)"/>
+      <path d="M230 544V577" stroke="#34d399" stroke-width="2" marker-end="url(#arrowGreen)"/>
+      <path d="M591 433V474" stroke="#22d3ee" stroke-width="2" marker-end="url(#arrowCyan)"/>
+      <path d="M591 544V577" stroke="#22d3ee" stroke-width="2" marker-end="url(#arrowCyan)"/>
+      <path d="M954 433V474" stroke="#fbbf24" stroke-width="2" marker-end="url(#arrowAmber)"/>
+      <path d="M954 544V577" stroke="#fbbf24" stroke-width="2" marker-end="url(#arrowAmber)"/>
+      <path d="M806 184V710H904" fill="none" stroke="#a78bfa" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#arrow)"/>
+
+      <!-- PR row -->
+      <g>
+        <rect x="48" y="101" width="129" height="76" rx="7" fill="#172033" stroke="#94a3b8"/>
+        <text x="112" y="131" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">Rama trabajo</text>
+        <text x="112" y="151" text-anchor="middle" fill="#94a3b8" font-size="10">commit + push</text>
+      </g>
+      <g>
+        <rect x="235" y="91" width="170" height="96" rx="7" fill="#082f49" stroke="#22d3ee"/>
+        <text x="320" y="120" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">PR → develop</text>
+        <text x="320" y="141" text-anchor="middle" fill="#67e8f9" font-size="10">review + conversaciones</text>
+        <text x="320" y="160" text-anchor="middle" fill="#94a3b8" font-size="9">base estrictamente actual</text>
+      </g>
+      <g aria-label="Required check epicrisis-pr-ci (hu-forms-shared)">
+        <rect x="457" y="78" width="193" height="122" rx="7" fill="#3f1725" stroke="#fb7185"/>
+        <text x="553" y="106" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">Ruleset obligatorio</text>
+        <text x="553" y="130" text-anchor="middle" fill="#fda4af" font-size="10">latest-develop</text>
+        <text x="553" y="150" text-anchor="middle" fill="#fda4af" font-size="9">epicrisis-pr-ci</text>
+        <text x="553" y="166" text-anchor="middle" fill="#fda4af" font-size="9">(hu-forms-shared)</text>
+        <text x="553" y="185" text-anchor="middle" fill="#94a3b8" font-size="9">Cloud Build · nunca publica</text>
+      </g>
+      <g>
+        <rect x="708" y="94" width="196" height="90" rx="7" fill="#064e3b" fill-opacity=".62" stroke="#34d399"/>
+        <text x="806" y="123" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">Rebase and merge</text>
+        <text x="806" y="145" text-anchor="middle" fill="#6ee7b7" font-size="10">develop = DEV</text>
+        <text x="806" y="163" text-anchor="middle" fill="#94a3b8" font-size="9">único gate humano</text>
+      </g>
+      <g>
+        <rect x="948" y="101" width="190" height="76" rx="7" fill="#172033" stroke="#475569"/>
+        <text x="1043" y="130" text-anchor="middle" fill="#fff" font-size="11" font-weight="700">Service CI retirado</text>
+        <text x="1043" y="151" text-anchor="middle" fill="#94a3b8" font-size="9">sin CI GHA duplicada</text>
+      </g>
+
+      <!-- DEV lanes -->
+      <g>
+        <rect x="83" y="359" width="294" height="74" rx="7" fill="#064e3b" fill-opacity=".45" stroke="#34d399"/>
+        <text x="230" y="385" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">Cloud Build · backend</text>
+        <text x="230" y="405" text-anchor="middle" fill="#6ee7b7" font-size="9">publish + deploy arrancan en paralelo</text>
+        <text x="230" y="420" text-anchor="middle" fill="#94a3b8" font-size="9">CI · Docker · Trivy · SHA tags</text>
+        <rect x="83" y="474" width="294" height="70" rx="7" fill="#10251f" stroke="#34d399"/>
+        <text x="230" y="500" text-anchor="middle" fill="#fff" font-size="11" font-weight="700">Artifact Registry</text>
+        <text x="230" y="521" text-anchor="middle" fill="#94a3b8" font-size="9">backend · bff · pdf-renderer → digest</text>
+        <rect x="83" y="577" width="294" height="39" rx="7" fill="#10251f" stroke="#34d399"/>
+        <text x="230" y="601" text-anchor="middle" fill="#fff" font-size="10">5 servicios Cloud Run + smoke/rollback</text>
+      </g>
+      <g>
+        <rect x="444" y="359" width="294" height="74" rx="7" fill="#083344" fill-opacity=".6" stroke="#22d3ee"/>
+        <text x="591" y="385" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">GitHub Actions · frontend</text>
+        <text x="591" y="405" text-anchor="middle" fill="#67e8f9" font-size="9">shared → Vite · config pública Terraform</text>
+        <text x="591" y="420" text-anchor="middle" fill="#94a3b8" font-size="9">WIF · sin keys</text>
+        <rect x="444" y="474" width="294" height="70" rx="7" fill="#10232a" stroke="#22d3ee"/>
+        <text x="591" y="500" text-anchor="middle" fill="#fff" font-size="11" font-weight="700">hosting-deployer-dev</text>
+        <text x="591" y="521" text-anchor="middle" fill="#94a3b8" font-size="9">Hosting admin · service usage · Run get</text>
+        <rect x="444" y="577" width="294" height="39" rx="7" fill="#10232a" stroke="#22d3ee"/>
+        <text x="591" y="601" text-anchor="middle" fill="#fff" font-size="10">Firebase Hosting + receipt + verificación</text>
+      </g>
+      <g>
+        <rect x="807" y="359" width="294" height="74" rx="7" fill="#451a03" fill-opacity=".58" stroke="#fbbf24"/>
+        <text x="954" y="385" text-anchor="middle" fill="#fff" font-size="12" font-weight="700">GitHub Actions · Terraform DEV</text>
+        <text x="954" y="405" text-anchor="middle" fill="#fde68a" font-size="9">plan live + fingerprint + aprobación head</text>
+        <text x="954" y="420" text-anchor="middle" fill="#94a3b8" font-size="9">identidades plan/apply separadas</text>
+        <rect x="807" y="474" width="294" height="70" rx="7" fill="#2a1e10" stroke="#fbbf24"/>
+        <text x="954" y="500" text-anchor="middle" fill="#fff" font-size="11" font-weight="700">Plan post-merge equivalente</text>
+        <text x="954" y="521" text-anchor="middle" fill="#94a3b8" font-size="9">apply exacto · plan 0 · smoke</text>
+        <rect x="807" y="577" width="294" height="39" rx="7" fill="#2a1e10" stroke="#fbbf24"/>
+        <text x="954" y="601" text-anchor="middle" fill="#fff" font-size="10">Servicios · IAM · configuración · drift</text>
+      </g>
+
+      <!-- TEST -->
+      <g>
+        <rect x="72" y="696" width="270" height="49" rx="7" fill="#172033" stroke="#64748b"/>
+        <text x="207" y="716" text-anchor="middle" fill="#fff" font-size="10" font-weight="700">develop SHA ya validado</text>
+        <text x="207" y="733" text-anchor="middle" fill="#94a3b8" font-size="9">git log test..develop = pendientes</text>
+        <path d="M342 720H430" stroke="#a78bfa" stroke-width="2" marker-end="url(#arrow)"/>
+        <rect x="430" y="696" width="245" height="49" rx="7" fill="#2e1065" fill-opacity=".6" stroke="#a78bfa"/>
+        <text x="552" y="716" text-anchor="middle" fill="#fff" font-size="10" font-weight="700">git push origin develop:test</text>
+        <text x="552" y="733" text-anchor="middle" fill="#c4b5fd" font-size="9">fast-forward · nunca PR/cherry-pick</text>
+        <path d="M675 720H762" stroke="#a78bfa" stroke-width="2" marker-end="url(#arrow)"/>
+        <rect x="762" y="696" width="352" height="49" rx="7" fill="#2e1065" fill-opacity=".6" stroke="#a78bfa"/>
+        <text x="938" y="716" text-anchor="middle" fill="#fff" font-size="10" font-weight="700">hu-forms-test · plan + deploy mismo digest</text>
+        <text x="938" y="733" text-anchor="middle" fill="#c4b5fd" font-size="9">destrucción sigue bloqueada · PROD sin pipeline</text>
+      </g>
+    </svg>
+  </section>
+
+  <section class="cards">
+    <article class="card"><h2><span class="dot rose"></span>Gate único</h2><p>Review + dos checks antes del merge. Sin bypass ni segunda aprobación para aplicación DEV.</p></article>
+    <article class="card"><h2><span class="dot green"></span>Backend inmutable</h2><p>Tres imágenes por SHA; deploy resuelve digests y restaura revisiones previas si smoke falla.</p></article>
+    <article class="card"><h2><span class="dot cyan"></span>Frontend mínimo</h2><p>WIF sin keys. Identidad Hosting sólo despliega sitio y lee metadata Cloud Run.</p></article>
+    <article class="card"><h2><span class="dot amber"></span>Infra separada</h2><p>Terraform conserva recursos/IAM/config. Imagen runtime cambia fuera del ownership Terraform.</p></article>
+  </section>
+  <div class="legend"><span><i class="line"></i>flujo automático</span><span><i class="line dash"></i>promoción explícita</span><span>Colores: backend · frontend · infraestructura · control</span></div>
+  <p class="foot">Fuente: docs/cicd.md · ADR-0003 · ADR-0005 · workflows y Terraform versionados</p>
+</main>
+</body>
+</html>
