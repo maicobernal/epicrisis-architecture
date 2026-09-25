@@ -83,8 +83,9 @@
       </g>
       <g>
         <rect x="948" y="101" width="190" height="76" rx="7" fill="#172033" stroke="#475569"/>
-        <text x="1043" y="130" text-anchor="middle" fill="#fff" font-size="11" font-weight="700">Service CI retirado</text>
-        <text x="1043" y="151" text-anchor="middle" fill="#94a3b8" font-size="9">sin CI GHA duplicada</text>
+        <text x="1043" y="126" text-anchor="middle" fill="#fff" font-size="11" font-weight="700">GHA por rutas</text>
+        <text x="1043" y="146" text-anchor="middle" fill="#94a3b8" font-size="9">scripts · Terraform · reglas</text>
+        <text x="1043" y="161" text-anchor="middle" fill="#94a3b8" font-size="9">sin jobs ajenos al cambio</text>
       </g>
 
       <!-- DEV lanes -->
@@ -143,7 +144,7 @@
     <article class="card"><h2><span class="dot rose"></span>Gate único</h2><p>Review + dos checks antes del merge. Sin bypass ni segunda aprobación para aplicación DEV.</p></article>
     <article class="card"><h2><span class="dot green"></span>Backend inmutable</h2><p>Tres imágenes por SHA; deploy resuelve digests y restaura revisiones previas si smoke falla.</p></article>
     <article class="card"><h2><span class="dot cyan"></span>Frontend mínimo</h2><p>WIF sin keys. Identidad Hosting sólo despliega sitio y lee metadata Cloud Run.</p></article>
-    <article class="card"><h2><span class="dot amber"></span>Infra separada</h2><p>Terraform conserva recursos/IAM/config. Imagen runtime cambia fuera del ownership Terraform.</p></article>
+    <article class="card"><h2><span class="dot amber"></span>Infra separada</h2><p>Terraform conserva recursos/IAM/config. Gates Terraform y Firestore se activan por rutas; cambios de reglas corren ambos.</p></article>
   </section>
   <div class="legend"><span><i class="line"></i>flujo automático</span><span><i class="line dash"></i>promoción explícita</span><span>Colores: backend · frontend · infraestructura · control</span></div>
   <p class="foot">Fuente: docs/cicd.md · ADR-0003 · ADR-0005 · workflows y Terraform versionados</p>
