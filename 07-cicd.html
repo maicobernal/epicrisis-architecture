@@ -22,7 +22,7 @@
   <section class="panel" aria-label="Diagrama del flujo CI/CD">
     <svg viewBox="0 0 1200 790" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="diagram-title diagram-desc">
       <title id="diagram-title">CI/CD de Epicrisis desde pull request hasta DEV y promoción TEST</title>
-      <desc id="diagram-desc">Una pull request pasa dos checks. Rebase merge a develop dispara backend Cloud Build, frontend GitHub Actions o Terraform DEV; este último publica además catálogo SDC y config de documento por tenant y corre el smoke SDC en la misma corrida. TEST recibe el mismo SHA sólo por fast-forward.</desc>
+      <desc id="diagram-desc">Una pull request pasa dos checks. Rebase merge a develop dispara backend Cloud Build, frontend GitHub Actions o Terraform DEV; este último publica además catálogo SDC y config de documento por tenant y corre el smoke SDC en la misma corrida. TEST recibe el mismo SHA sólo por fast-forward; ese push despliega imágenes del commit, plan y apply TEST, catálogo y config por tenant con verificación de solo lectura, y frontend.</desc>
       <defs>
         <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M32 0H0V32" fill="none" stroke="#1e293b" stroke-width=".5"/></pattern>
         <marker id="arrow" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="#64748b"/></marker>
@@ -135,8 +135,8 @@
         <text x="552" y="733" text-anchor="middle" fill="#c4b5fd" font-size="9">fast-forward · nunca PR/cherry-pick</text>
         <path d="M675 720H762" stroke="#a78bfa" stroke-width="2" marker-end="url(#arrow)"/>
         <rect x="762" y="696" width="352" height="49" rx="7" fill="#2e1065" fill-opacity=".6" stroke="#a78bfa"/>
-        <text x="938" y="716" text-anchor="middle" fill="#fff" font-size="10" font-weight="700">hu-forms-test · plan + deploy mismo digest</text>
-        <text x="938" y="733" text-anchor="middle" fill="#c4b5fd" font-size="9">delete/replacement permitido · PROD sin pipeline</text>
+        <text x="938" y="716" text-anchor="middle" fill="#fff" font-size="10" font-weight="700">hu-forms-test · runtime → plan → apply</text>
+        <text x="938" y="733" text-anchor="middle" fill="#c4b5fd" font-size="9">→ catálogo + config (CAS) · verificación → frontend</text>
       </g>
     </svg>
   </section>
@@ -145,7 +145,7 @@
     <article class="card"><h2><span class="dot rose"></span>Gate único</h2><p>Review + dos checks antes del merge. Sin bypass ni segunda aprobación para aplicación DEV.</p></article>
     <article class="card"><h2><span class="dot green"></span>Backend inmutable</h2><p>Tres imágenes por SHA; deploy resuelve digests y restaura revisiones previas si smoke falla.</p></article>
     <article class="card"><h2><span class="dot cyan"></span>Frontend mínimo</h2><p>WIF sin keys. Identidad Hosting sólo despliega sitio y lee metadata Cloud Run.</p></article>
-    <article class="card"><h2><span class="dot amber"></span>Contenido clínico</h2><p>Catálogo (IG) y config de documento por tenant son código: dry-run read-only en el PR con terraform-plan-dev; post-merge, terraform-apply-dev impersona sdc-catalog-publisher-dev y aplica la config con CAS por hash. Recibos sin PHI; cero pasos manuales.</p></article>
+    <article class="card"><h2><span class="dot amber"></span>Contenido clínico</h2><p>Catálogo (IG) y config de documento por tenant son código: dry-run read-only en el PR con terraform-plan-dev; post-merge, terraform-apply-dev impersona sdc-catalog-publisher-dev y aplica la config con CAS por hash. Recibos sin PHI; cero pasos manuales. En TEST, la promoción aplica lo mismo como terraform-apply-test y verifica catálogo y runtime en sólo lectura.</p></article>
     <article class="card"><h2><span class="dot amber"></span>Infra separada</h2><p>Terraform conserva recursos/IAM/config. Imágenes SDC: digest en tfvars, espejadas en hu-forms-shared; Terraform las rueda por plan revisado. Gates Terraform y Firestore se activan por rutas; cambios de reglas corren ambos.</p></article>
   </section>
   <div class="legend"><span><i class="line"></i>flujo automático</span><span><i class="line dash"></i>promoción explícita</span><span>Colores: backend · frontend · infraestructura · control</span></div>
