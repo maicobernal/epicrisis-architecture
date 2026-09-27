@@ -14,15 +14,15 @@
     <div>
       <div class="eyebrow">● FLUJO ACTIVO · 2026-09-26</div>
       <h1 class="title">Una PR, un merge, DEV automático</h1>
-      <p class="sub">Gate único antes del merge. Después, backend, frontend e infraestructura siguen pipelines separados con identidades mínimas. TEST sólo avanza por fast-forward del mismo SHA.</p>
+      <p class="sub">Gate único antes del merge. Después, backend, frontend e infraestructura siguen pipelines separados con identidades mínimas. TEST y PROD sólo avanzan por fast-forward del mismo SHA; PROD además exige un PR test → prod aprobado sobre ese commit.</p>
     </div>
     <a class="back" href="index.html">← Portal arquitectura</a>
   </header>
 
   <section class="panel" aria-label="Diagrama del flujo CI/CD">
-    <svg viewBox="0 0 1200 790" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="diagram-title diagram-desc">
-      <title id="diagram-title">CI/CD de Epicrisis desde pull request hasta DEV y promoción TEST</title>
-      <desc id="diagram-desc">Una pull request pasa dos checks. Rebase merge a develop dispara backend Cloud Build, frontend GitHub Actions o Terraform DEV; este último publica además catálogo SDC y config de documento por tenant y corre el smoke SDC en la misma corrida. TEST recibe el mismo SHA sólo por fast-forward; ese push despliega imágenes del commit, plan y apply TEST, catálogo y config por tenant con verificación de solo lectura, y frontend.</desc>
+    <svg viewBox="0 0 1200 910" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="diagram-title diagram-desc">
+      <title id="diagram-title">CI/CD de Epicrisis desde pull request hasta DEV y promoción TEST y PROD</title>
+      <desc id="diagram-desc">Una pull request pasa dos checks. Rebase merge a develop dispara backend Cloud Build, frontend GitHub Actions o Terraform DEV; este último publica además catálogo SDC y config de documento por tenant y corre el smoke SDC en la misma corrida. TEST recibe el mismo SHA sólo por fast-forward; ese push despliega imágenes del commit, plan y apply TEST, catálogo y config por tenant con verificación de solo lectura, y frontend. PROD recibe el head de un PR test → prod aprobado sobre ese commit, sólo por fast-forward; ese push verifica la aprobación antes de cualquier credencial y despliega imágenes, plan y apply PROD con gate de manifiesto, contenido clínico aprobado por ese PR y frontend.</desc>
       <defs>
         <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M32 0H0V32" fill="none" stroke="#1e293b" stroke-width=".5"/></pattern>
         <marker id="arrow" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="#64748b"/></marker>
@@ -30,7 +30,7 @@
         <marker id="arrowCyan" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="#22d3ee"/></marker>
         <marker id="arrowAmber" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="#fbbf24"/></marker>
       </defs>
-      <rect width="1200" height="790" rx="10" fill="#020617"/><rect width="1200" height="790" rx="10" fill="url(#grid)"/>
+      <rect width="1200" height="910" rx="10" fill="#020617"/><rect width="1200" height="910" rx="10" fill="url(#grid)"/>
 
       <!-- Boundaries -->
       <rect x="20" y="24" width="1160" height="232" rx="12" fill="#0f172a" fill-opacity=".35" stroke="#334155" stroke-dasharray="7 5"/>
@@ -138,7 +138,25 @@
         <text x="938" y="716" text-anchor="middle" fill="#fff" font-size="10" font-weight="700">hu-forms-test · runtime → plan → apply</text>
         <text x="938" y="733" text-anchor="middle" fill="#c4b5fd" font-size="9">→ catálogo + config (CAS) · verificación → frontend</text>
       </g>
-    </svg>
+
+      <!-- PROD -->
+      <rect x="20" y="784" width="1160" height="112" rx="12" fill="#0f172a" fill-opacity=".35" stroke="#fb7185" stroke-dasharray="7 5"/>
+      <text x="38" y="807" fill="#fb7185" font-size="11" font-weight="600">PROMOCIÓN PROD · hu-forms-prod · PHI · MISMO SHA QUE TEST</text>
+      <path d="M207 745V826" stroke="#fb7185" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#arrow)"/>
+      <g>
+        <rect x="72" y="826" width="270" height="49" rx="7" fill="#3f1725" stroke="#fb7185"/>
+        <text x="207" y="846" text-anchor="middle" fill="#fff" font-size="10" font-weight="700">PR test → prod aprobado</text>
+        <text x="207" y="863" text-anchor="middle" fill="#fda4af" font-size="9">review = aprobación clínica · nunca merge</text>
+        <path d="M342 850H430" stroke="#fb7185" stroke-width="2" marker-end="url(#arrow)"/>
+        <rect x="430" y="826" width="245" height="49" rx="7" fill="#3f1725" stroke="#fb7185"/>
+        <text x="552" y="846" text-anchor="middle" fill="#fff" font-size="10" font-weight="700">git push origin &lt;head&gt;:prod</text>
+        <text x="552" y="863" text-anchor="middle" fill="#fda4af" font-size="9">fast-forward desde test · git log prod..test</text>
+        <path d="M675 850H762" stroke="#fb7185" stroke-width="2" marker-end="url(#arrow)"/>
+        <rect x="762" y="826" width="352" height="49" rx="7" fill="#3f1725" stroke="#fb7185"/>
+        <text x="938" y="846" text-anchor="middle" fill="#fff" font-size="10" font-weight="700">guard → runtime → plan (gate PROD) → apply</text>
+        <text x="938" y="863" text-anchor="middle" fill="#fda4af" font-size="9">→ contenido clínico-approved · frontend · CMEK + audit + backups</text>
+      </g>
+    </svg>)
   </section>
 
   <section class="cards">
@@ -146,6 +164,7 @@
     <article class="card"><h2><span class="dot green"></span>Backend inmutable</h2><p>Tres imágenes por SHA; deploy resuelve digests y restaura revisiones previas si smoke falla.</p></article>
     <article class="card"><h2><span class="dot cyan"></span>Frontend mínimo</h2><p>WIF sin keys. Identidad Hosting sólo despliega sitio y lee metadata Cloud Run.</p></article>
     <article class="card"><h2><span class="dot amber"></span>Contenido clínico</h2><p>Catálogo (IG) y config de documento por tenant son código: dry-run read-only en el PR con terraform-plan-dev; post-merge, terraform-apply-dev impersona sdc-catalog-publisher-dev y aplica la config con CAS por hash. Recibos sin PHI; cero pasos manuales. En TEST, la promoción aplica lo mismo como terraform-apply-test y verifica catálogo y runtime en sólo lectura. La captura siempre está activa: sin flag, rollback ni E2E manual; gate SDC y smoke corren en cada apply.</p></article>
+    <article class="card"><h2><span class="dot rose"></span>PROD</h2><p>Sólo el head de un PR test → prod aprobado sobre ese commit, empujado por fast-forward. El guard lo verifica sin credenciales; el gate de manifiesto PROD prohíbe deletes, lectores clínicos y CMEK fuera de los agentes de Google. Único paso manual: el bootstrap inicial de credenciales.</p></article>
     <article class="card"><h2><span class="dot amber"></span>Infra separada</h2><p>Terraform conserva recursos/IAM/config. Imágenes SDC: digest en tfvars, espejadas en hu-forms-shared; Terraform las rueda por plan revisado. Gates Terraform y Firestore se activan por rutas; cambios de reglas corren ambos.</p></article>
   </section>
   <div class="legend"><span><i class="line"></i>flujo automático</span><span><i class="line dash"></i>promoción explícita</span><span>Colores: backend · frontend · infraestructura · control</span></div>
