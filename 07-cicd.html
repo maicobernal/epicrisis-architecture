@@ -16,6 +16,7 @@
       <h1 class="title">Una PR, un merge, DEV automático</h1>
       <p class="sub">Gate único antes del merge. Después, backend, frontend e infraestructura siguen pipelines separados con identidades mínimas. TEST y PROD sólo avanzan por fast-forward del mismo SHA; PROD además exige un PR test → prod aprobado sobre ese commit.</p>
       <p class="sub">Seguridad PDF: paquetes OpenSSL fijados y capa APT renovada mediante SECURITY_REFRESH. El contrato verifica los pins y Trivy HIGH/CRITICAL bloquea la publicación si quedan vulnerabilidades.</p>
+      <p class="sub">Auditoría npm: gate completo con excepción aprobada por Maico el 22/10/2026 solo para GHSA-vfj7-8cjw-p6xm en las cadenas exactas de Firebase CLI y Tailwind de desarrollo. Vence 05/11/2026 03:00 UTC; otra causa alta/crítica, cambio de versión/ruta, nueva publicación de Braces o fallo de auditoría/registro bloquea. El checker de contexto backend y de instalación BFF rechaza estas herramientas en runtime. Trivy permanece sin cambios; evidencia de contexto no equivale a imagen construida. <a href="../docs/EXCEPCION_BRACES_PROPUESTA.md">Alcance y controles</a>.</p>
     </div>
     <a class="back" href="index.html">← Portal arquitectura</a>
   </header>
