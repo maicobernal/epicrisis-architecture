@@ -49,6 +49,6 @@ contains_fixed 'runtime_enabled=false' "${architecture_dir}/README.md"
 contains_fixed 'tenant_registry_status=provisioning' "${architecture_dir}/README.md"
 contains_fixed 'epicrisis-pr-ci (hu-forms-shared)' "${architecture_dir}/07-cicd.html"
 contains_fixed 'hosting-deployer-dev' "${architecture_dir}/07-cicd.html"
-contains_fixed 'develop:test' "${architecture_dir}/07-cicd.html"
+contains_fixed 'TEST retirado' "${architecture_dir}/07-cicd.html"
 
 echo "Architecture portal validated: ${#required[@]} required files"

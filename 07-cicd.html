@@ -12,21 +12,20 @@
 <main class="wrap">
   <header class="top">
     <div>
-      <div class="eyebrow">● FLUJO ACTIVO · 2026-09-26</div>
+      <div class="eyebrow">● FLUJO ACTIVO · 2026-11-22 · DEV + PROD</div>
       <h1 class="title">Una PR, un merge, DEV automático</h1>
-      <p class="sub">Gate único antes del merge. Después, backend, frontend e infraestructura siguen pipelines separados con identidades mínimas. TEST y PROD sólo avanzan por fast-forward del mismo SHA; PROD además exige un PR test → prod aprobado sobre ese commit.</p>
+      <p class="sub">Gate único antes del merge. Después, backend, frontend e infraestructura siguen pipelines separados con identidades mínimas. TEST se retiró el 2026-11-22: los entornos son DEV y PROD. PROD está inactivo; al activarlo avanzará por fast-forward desde develop al head de un PR aprobado.</p>
       <p class="sub">Runtime Node: bases por digest en 24.22.1 (CVE-2026-111497 y fixes DNS/TLS). Antes de publicar, cada imagen final backend/BFF/PDF ejecuta check-node-runtime.cjs con su propio binario; Node anterior al parche bloquea. PDF reemplaza también Brotli nativo por la release oficial 1.1.1, con commit/checksum fijados y prueba dinámica de versión/roundtrip. Conserva metadata Debian y reporte unfixed, sin excepciones nuevas. Functions mantiene nodejs22 administrado y auditoría npm en CI/deploy TEST. CI runner se consume por digest publicado y verificado. SDC se publicó sólo en hu-forms-shared desde commits de PR validados, sin desplegar sandbox UMA, y sus pins DEV/TEST coinciden. Structuring requiere revisión independiente de su imagen Python.</p>
       <p class="sub">Seguridad PDF: LibreOffice fijado en 4:25.2.3-2+deb13u8 (motor 25.2.3.2), paquetes OpenSSL fijados y capa APT renovada mediante SECURITY_REFRESH. El contrato verifica los pins y Trivy HIGH/CRITICAL bloquea la publicación si quedan vulnerabilidades.</p>
       <p class="sub">Auditoría npm: gate completo con excepción aprobada por Maico el 22/10/2026 solo para GHSA-vfj7-8cjw-p6xm en las cadenas exactas de Firebase CLI y Tailwind de desarrollo. Vence 05/11/2026 03:00 UTC; otra causa alta/crítica, cambio de versión/ruta, nueva publicación de Braces o fallo de auditoría/registro bloquea. El checker de contexto backend y de instalación BFF rechaza estas herramientas en runtime. Trivy permanece sin cambios; evidencia de contexto no equivale a imagen construida. <a href="../docs/EXCEPCION_BRACES_PROPUESTA.md">Alcance y controles</a>.</p>
-      <p class="sub">Recuperación manual auth TEST: operación protegida auth-functions sobre test para beforecreate y beforesignin (HEC/HF). Exige revisión Cloud Functions nueva, fresca, Ready y con target, identidad y pepper revisados. La candidata recién creada puede estar Ready/Retired sólo con ContainerReady y tráfico 0% probado; después del routing exige Ready sin Retired, Active y 100%. Nunca selecciona latest ni revisiones históricas retiradas. Error → restaura tráfico previo; login real sigue siendo prueba aparte. <a href="../docs/cicd.md">Procedimiento y autorización</a>.</p>
     </div>
     <a class="back" href="index.html">← Portal arquitectura</a>
   </header>
 
   <section class="panel" aria-label="Diagrama del flujo CI/CD">
-    <svg viewBox="0 0 1200 910" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="diagram-title diagram-desc">
-      <title id="diagram-title">CI/CD de Epicrisis desde pull request hasta DEV y promoción TEST y PROD</title>
-      <desc id="diagram-desc">Una pull request pasa dos checks. Rebase merge a develop dispara backend Cloud Build, frontend GitHub Actions o Terraform DEV; este último publica además catálogo SDC y config de documento por tenant y corre el smoke SDC en la misma corrida. TEST recibe el mismo SHA sólo por fast-forward; ese push despliega imágenes del commit, plan y apply TEST, catálogo y config por tenant con verificación de solo lectura, y frontend. PROD recibe el head de un PR test → prod aprobado sobre ese commit, sólo por fast-forward; ese push verifica la aprobación antes de cualquier credencial y despliega imágenes, plan y apply PROD con gate de manifiesto, contenido clínico aprobado por ese PR y frontend.</desc>
+    <svg viewBox="0 0 1200 780" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="diagram-title diagram-desc">
+      <title id="diagram-title">CI/CD de Epicrisis desde pull request hasta DEV, y PROD pendiente de activación</title>
+      <desc id="diagram-desc">Una pull request pasa dos checks. Rebase merge a develop dispara backend Cloud Build, frontend GitHub Actions o Terraform DEV; este último publica además catálogo SDC y config de documento por tenant y corre el smoke SDC en la misma corrida. PROD está inactivo: al activarse avanzará por fast-forward desde develop al head de un PR aprobado.</desc>
       <defs>
         <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M32 0H0V32" fill="none" stroke="#1e293b" stroke-width=".5"/></pattern>
         <marker id="arrow" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto"><polygon points="0 0,9 3.5,0 7" fill="#64748b"/></marker>
@@ -41,8 +40,6 @@
       <text x="38" y="47" fill="#94a3b8" font-size="11" font-weight="600">GITHUB · CONTROL Y APROBACIÓN</text>
       <rect x="20" y="280" width="1160" height="350" rx="12" fill="#0f172a" fill-opacity=".35" stroke="#fbbf24" stroke-dasharray="7 5"/>
       <text x="38" y="303" fill="#fbbf24" font-size="11" font-weight="600">DEV · hu-forms-shared + hu-forms-dev · us-central1 · DATOS SINTÉTICOS</text>
-      <rect x="20" y="654" width="1160" height="112" rx="12" fill="#0f172a" fill-opacity=".35" stroke="#a78bfa" stroke-dasharray="7 5"/>
-      <text x="38" y="677" fill="#a78bfa" font-size="11" font-weight="600">PROMOCIÓN TEST · MISMO SHA, SIN REBUILD</text>
 
       <!-- Arrows first -->
       <path d="M177 139H235" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
@@ -129,48 +126,32 @@
         <text x="954" y="608" text-anchor="middle" fill="#fde68a" font-size="8">→ catálogo + config tenant (CAS) → smoke SDC</text>
       </g>
 
-      <!-- TEST -->
+      <!-- PROD (inactive) -->
+      <rect x="20" y="654" width="1160" height="112" rx="12" fill="#0f172a" fill-opacity=".35" stroke="#fb7185" stroke-dasharray="7 5"/>
+      <text x="38" y="677" fill="#fb7185" font-size="11" font-weight="600">PROD · hu-forms-prod · PHI · INACTIVO HASTA CONFORMIDAD DEL HOSPITAL</text>
       <g>
-        <rect x="72" y="696" width="270" height="49" rx="7" fill="#172033" stroke="#64748b"/>
-        <text x="207" y="716" text-anchor="middle" fill="#fff" font-size="10" font-weight="700">develop SHA ya validado</text>
-        <text x="207" y="733" text-anchor="middle" fill="#94a3b8" font-size="9">git log test..develop = pendientes</text>
-        <path d="M342 720H430" stroke="#a78bfa" stroke-width="2" marker-end="url(#arrow)"/>
-        <rect x="430" y="696" width="245" height="49" rx="7" fill="#2e1065" fill-opacity=".6" stroke="#a78bfa"/>
-        <text x="552" y="716" text-anchor="middle" fill="#fff" font-size="10" font-weight="700">git push origin develop:test</text>
-        <text x="552" y="733" text-anchor="middle" fill="#c4b5fd" font-size="9">fast-forward · nunca PR/cherry-pick</text>
-        <path d="M675 720H762" stroke="#a78bfa" stroke-width="2" marker-end="url(#arrow)"/>
-        <rect x="762" y="696" width="352" height="49" rx="7" fill="#2e1065" fill-opacity=".6" stroke="#a78bfa"/>
-        <text x="938" y="716" text-anchor="middle" fill="#fff" font-size="10" font-weight="700">hu-forms-test · runtime → plan → apply</text>
-        <text x="938" y="733" text-anchor="middle" fill="#c4b5fd" font-size="9">→ catálogo + config (CAS) · verificación → frontend</text>
-      </g>
-
-      <!-- PROD -->
-      <rect x="20" y="784" width="1160" height="112" rx="12" fill="#0f172a" fill-opacity=".35" stroke="#fb7185" stroke-dasharray="7 5"/>
-      <text x="38" y="807" fill="#fb7185" font-size="11" font-weight="600">PROMOCIÓN PROD · hu-forms-prod · PHI · MISMO SHA QUE TEST</text>
-      <path d="M207 745V826" stroke="#fb7185" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#arrow)"/>
-      <g>
-        <rect x="72" y="826" width="270" height="49" rx="7" fill="#3f1725" stroke="#fb7185"/>
-        <text x="207" y="846" text-anchor="middle" fill="#fff" font-size="10" font-weight="700">PR test → prod aprobado</text>
-        <text x="207" y="863" text-anchor="middle" fill="#fda4af" font-size="9">review = aprobación clínica · nunca merge</text>
-        <path d="M342 850H430" stroke="#fb7185" stroke-width="2" marker-end="url(#arrow)"/>
-        <rect x="430" y="826" width="245" height="49" rx="7" fill="#3f1725" stroke="#fb7185"/>
-        <text x="552" y="846" text-anchor="middle" fill="#fff" font-size="10" font-weight="700">git push origin &lt;head&gt;:prod</text>
-        <text x="552" y="863" text-anchor="middle" fill="#fda4af" font-size="9">fast-forward desde test · git log prod..test</text>
-        <path d="M675 850H762" stroke="#fb7185" stroke-width="2" marker-end="url(#arrow)"/>
-        <rect x="762" y="826" width="352" height="49" rx="7" fill="#3f1725" stroke="#fb7185"/>
-        <text x="938" y="846" text-anchor="middle" fill="#fff" font-size="10" font-weight="700">guard → runtime → plan (gate PROD) → apply</text>
-        <text x="938" y="863" text-anchor="middle" fill="#fda4af" font-size="9">→ contenido clínico-approved · frontend · CMEK + audit + backups</text>
+        <rect x="72" y="696" width="270" height="49" rx="7" fill="#3f1725" stroke="#fb7185"/>
+        <text x="207" y="716" text-anchor="middle" fill="#fff" font-size="10" font-weight="700">PR develop → prod aprobado</text>
+        <text x="207" y="733" text-anchor="middle" fill="#fda4af" font-size="9">review = aprobación clínica · nunca merge</text>
+        <path d="M342 720H430" stroke="#fb7185" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#arrow)"/>
+        <rect x="430" y="696" width="245" height="49" rx="7" fill="#3f1725" stroke="#fb7185"/>
+        <text x="552" y="716" text-anchor="middle" fill="#fff" font-size="10" font-weight="700">git push origin &lt;head&gt;:prod</text>
+        <text x="552" y="733" text-anchor="middle" fill="#fda4af" font-size="9">fast-forward desde develop · git log prod..develop</text>
+        <path d="M675 720H762" stroke="#fb7185" stroke-width="2" stroke-dasharray="6 5" marker-end="url(#arrow)"/>
+        <rect x="762" y="696" width="352" height="49" rx="7" fill="#3f1725" stroke="#fb7185"/>
+        <text x="938" y="716" text-anchor="middle" fill="#fff" font-size="10" font-weight="700">guard → runtime → plan (gate PROD) → apply</text>
+        <text x="938" y="733" text-anchor="middle" fill="#fda4af" font-size="9">pipeline a recablear desde develop al activar PROD</text>
       </g>
     </svg>)
   </section>
 
   <section class="cards">
-    <article class="card"><h2><span class="dot rose"></span>Entrada compartida: expansión DEV/TEST</h2><p>Networking 4.3.0 prepara referencia a tres backends TEST desde DEV, desactivada por defecto. Preparación: DEV adjunta certificado TEST previamente emitido con rutas false y se promueven grants de uso sobre esos backends a TEST. Tras verificar TLS/SNI y permisos efectivos, otra PR habilita rutas candidatas. Se conservan certificado DEV primero, IP, proxy y entrada TEST anterior. El gate IAM conserva rol, miembro, proyecto y tres backends exactos; acepta sólo nombre corto o ruta global exacta TEST después del refresh y condition vacío como array del proveedor, sin modificar el manifiesto revisado. El gate TLS exige PEM público del provider, SAN único TEST y vigencia; rechaza comodines, cambios DEV y Certificate Manager. Rotación Google TEST en dos entregas: adjuntar Google conservando puente y DEV primero, comprobar ACTIVE, esperar 30 minutos de propagación y validar TLS, luego retirar sólo puente con PEM Google fresco. El fingerprint Google servido se prueba después, antes del retiro de la entrada TEST anterior. Crear y retirar a la vez está bloqueado. Antes de DNS se prueba TLS, fingerprint DEV, config TEST, rutas e identidades HEC/HF. No mueve DNS ni retira recursos. Gobierno IAM/logs para futura PROD sigue desactivado; no hay rutas PROD ni excepción PHI. Retiro TEST separado: sólo frontend antiguo, preservando backends/Armor; plan binario y certificado Google servido se verifican antes de bajas. Cambios de índices usan moved blocks sin reemplazar DEV. Cada etapa usa PR y entrega vigente.</p></article>
+    <article class="card"><h2><span class="dot rose"></span>TEST retirado</h2><p>hu-forms-test se dio de baja el 2026-11-22 (sin datos reales; testers en DEV). DEV ya no rutea epicrisis-test ni sirve su certificado. Para restaurarlo: tag test-env-retired y docs/cicd.md, "Restaurar TEST".</p></article>
     <article class="card"><h2><span class="dot rose"></span>Gate único</h2><p>Review + dos checks antes del merge. Sin bypass ni segunda aprobación para aplicación DEV.</p></article>
     <article class="card"><h2><span class="dot green"></span>Backend inmutable</h2><p>Tres imágenes por SHA; deploy resuelve digests y restaura revisiones previas si smoke falla.</p></article>
     <article class="card"><h2><span class="dot cyan"></span>Frontend mínimo</h2><p>WIF sin keys. Identidad Hosting sólo despliega sitio y lee metadata Cloud Run.</p></article>
-    <article class="card"><h2><span class="dot amber"></span>Contenido clínico</h2><p>Plantillas v3 agregadas conservando v1/v2; TEST requiere promoción explícita. Catálogo (IG), config de documento y config de prellenado por tenant son código: dry-run read-only en el PR con terraform-plan-dev; post-merge, terraform-apply-dev impersona sdc-catalog-publisher-dev y aplica la config con CAS por hash. Recibos sin PHI; cero pasos manuales. Variantes de módulos por tenant se publican con referencias exactas: HEC 1.0.4 y HF 1.0.9 usan variantes propias de Evolución y versiones/hashes nuevos (configs HEC v5 y HF v11 en DEV/TEST). Los borradores previos conservan su pin salvo actualización explícita compatible. En TEST, la promoción aplica lo mismo como terraform-apply-test y verifica catálogo y runtime en sólo lectura. La captura siempre está activa: sin flag, rollback ni E2E manual; gate SDC y smoke corren en cada apply.</p></article>
-    <article class="card"><h2><span class="dot rose"></span>PROD</h2><p>Sólo el head de un PR test → prod aprobado sobre ese commit, empujado por fast-forward. El guard lo verifica sin credenciales; el gate de manifiesto PROD prohíbe deletes, lectores clínicos y CMEK fuera de los agentes de Google. Único paso manual: el bootstrap inicial de credenciales.</p></article>
+    <article class="card"><h2><span class="dot amber"></span>Contenido clínico</h2><p>Plantillas v3 agregadas conservando v1/v2. Catálogo (IG), config de documento y config de prellenado por tenant son código: dry-run read-only en el PR con terraform-plan-dev; post-merge, terraform-apply-dev impersona sdc-catalog-publisher-dev y aplica la config con CAS por hash. Recibos sin PHI; cero pasos manuales. Variantes de módulos por tenant se publican con referencias exactas: HEC 1.0.4 y HF 1.0.9 usan variantes propias de Evolución y versiones/hashes nuevos (configs HEC v5 y HF v11 en DEV/TEST). Los borradores previos conservan su pin salvo actualización explícita compatible. En TEST, la promoción aplica lo mismo como terraform-apply-test y verifica catálogo y runtime en sólo lectura. La captura siempre está activa: sin flag, rollback ni E2E manual; gate SDC y smoke corren en cada apply.</p></article>
+    <article class="card"><h2><span class="dot rose"></span>PROD</h2><p>Inactivo. Al activarse: sólo el head de un PR develop → prod aprobado sobre ese commit, empujado por fast-forward. El guard lo verifica sin credenciales; el gate de manifiesto PROD prohíbe deletes, lectores clínicos y CMEK fuera de los agentes de Google. Único paso manual: el bootstrap inicial de credenciales.</p></article>
     <article class="card"><h2><span class="dot amber"></span>Infra separada</h2><p>Terraform conserva recursos/IAM/config. Imágenes SDC y structuring (opcional, construida en ut-fhir-extract): digest en tfvars, espejadas en hu-forms-shared; Terraform las rueda por plan revisado. Structuring es interno, sólo jobs lo invoca (Direct VPC egress por la subred con Private Google Access, cola structuring que sólo la API encola) y su clave TypeSafe es una versión de Secret Manager cargada fuera de Terraform. TEST fija estos digests antes de promover; structuring conserva identidad, secreto y cola TEST propios, con prellenado HF configurado sobre el mismo Google Doc sintético de DEV, compartido con la identidad TEST como Lector; HEC queda apagado. Su alta requiere primero identidad/contenedor y versión del secreto, después servicio. Gates Terraform y Firestore se activan por rutas; cambios de reglas corren ambos.</p></article>
   </section>
   <div class="legend"><span><i class="line"></i>flujo automático</span><span><i class="line dash"></i>promoción explícita</span><span>Colores: backend · frontend · infraestructura · control</span></div>
